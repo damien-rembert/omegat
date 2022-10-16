@@ -450,6 +450,8 @@ public class EditorController implements IEditor {
         case EMPTY_PROJECT:
             data = emptyProjectPane;
             updatedTitle = emptyProjectPaneTitle;
+            Log.log("\n\n\n\nin editorController");
+            Log.log("in the empty project case of the switch\n\n\n\n");
             break;
         case FIRST_ENTRY:
             displayedFileIndex = 0;

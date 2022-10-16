@@ -167,6 +167,10 @@ public final class MainWindowUI {
             case LOAD:
                 saveScreenLayout(mainWindow);
                 loadScreenLayout(mainWindow, perProjLayout);
+
+                Log.log("\n\n\n\nin the mainWindowsUI");
+                Log.log("in the LOAD case of the switch\n\n\n\n");
+
                 didApplyPerProjectLayout = true;
                 break;
             case SAVE:
@@ -230,7 +234,9 @@ public final class MainWindowUI {
                     tooltipText = "MW_PROGRESS_TOOLTIP_PERCENTAGE";
                 }
 
+                // Bad logic in this if else?
                 if (Core.getProject().isProjectLoaded()) {
+                    Log.log("\n\n\n\nin the mainWindowsUI about to call showstat\n\n\n\n");
                     ((EditorController) Core.getEditor()).showStat();
                 } else {
                     Core.getMainWindow().showProgressMessage(statusText);
