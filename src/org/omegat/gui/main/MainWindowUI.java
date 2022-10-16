@@ -167,9 +167,14 @@ public final class MainWindowUI {
             case LOAD:
                 saveScreenLayout(mainWindow);
                 loadScreenLayout(mainWindow, perProjLayout);
-
-                Log.log("\n\n\n\nin the mainWindowsUI");
-                Log.log("in the LOAD case of the switch\n\n\n\n");
+                Log.log("==============================================================");
+                Log.log("==============================================================");
+                Log.log("==============================================================");
+                Log.log("in the mainWindowsUI");
+                Log.log("in the LOAD case of the switch");
+                Log.log("==============================================================");
+                Log.log("==============================================================");
+                Log.log("==============================================================");
 
                 didApplyPerProjectLayout = true;
                 break;
@@ -236,7 +241,14 @@ public final class MainWindowUI {
 
                 // Bad logic in this if else?
                 if (Core.getProject().isProjectLoaded()) {
-                    Log.log("\n\n\n\nin the mainWindowsUI about to call showstat\n\n\n\n");
+                    Log.log("==============================================================");
+                    Log.log("==============================================================");
+                    Log.log("==============================================================");
+
+                    Log.log("in the mainWindowsUI about to call showstat");
+                    Log.log("==============================================================");
+                    Log.log("==============================================================");
+                    Log.log("==============================================================");
                     ((EditorController) Core.getEditor()).showStat();
                 } else {
                     Core.getMainWindow().showProgressMessage(statusText);
