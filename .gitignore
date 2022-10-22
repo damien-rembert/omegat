@@ -10,6 +10,10 @@ bin
 local.properties
 
 .idea
+.vscode
+
+# MacOS system file
+.DS_Store
 
 # Docs
 .fop
