@@ -44,6 +44,7 @@ import org.omegat.util.StringUtil;
 import org.omegat.util.TagUtil;
 import org.omegat.util.TagUtil.Tag;
 import org.omegat.util.Token;
+import org.omegat.tokenizer.ITokenizer.StemmingMode;
 
 /**
  * Some utilities methods.
@@ -70,7 +71,7 @@ public final class EditorUtils {
      */
     // this seems to be where things happen
     // getWordStart uses BreakIterator.getWordInstance() to actually get the words
-    public static int getWordStart(JTextComponent c, int offs) throws BadLocationException {
+    public static int getWordStart(EditorTextArea3 editor, int offset) throws BadLocationException {
 
         // Use the project's target tokenizer to determine the word that was
         // right-clicked.
@@ -78,18 +79,21 @@ public final class EditorUtils {
         // under the hood, which leads to inconsistent results when compared to other
         // spell-
         // checking functionality in OmegaT.
-        // String translation = ec.getCurrentTranslation();
-        // Token tok = null;
-        // int relOffset = ec.getPositionInEntryTranslation(mousepos);
-        // for (Token t :
-        // Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-        // StemmingMode.NONE)) {
-        // if (t.getOffset() <= relOffset && relOffset < t.getOffset() + t.getLength())
-        // {
-        // tok = t;
-        // break;
-        // }
-        // }
+        // String translation = editor.getDocument().getText(offset, offset);
+        String translation = editor.getOmDocument().extractTranslation();
+        Token token = null;
+        int relativeOffset = getPositionInEntryTranslation(editor, offset);
+        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
+                token = currentToken;
+                break;
+            }
+        }
+        // The wordStart must be the absolute offset in the Editor document.
+        int start = offset - relativeOffset + token.getOffset();
+        // start = tok.getOffset();
+        
         // BreakIterator breaker = DefaultTokenizer.getWordBreaker();
         // OR
         // Locale locale = Locale.UK;
@@ -99,13 +103,34 @@ public final class EditorUtils {
         // for (Token t :
         // Core.getProject().getTargetTokenizer().tokenizeWords(translation,
         // StemmingMode.NONE)) {
-        int result = Utilities.getWordStart(c, offs);
-        char ch = c.getDocument().getText(result, 1).charAt(0);
-        if (isDirectionChar(ch)) {
-            result++;
+        char characterAtStartIndex = editor.getDocument().getText(start, 1).charAt(0);
+        if (isDirectionChar(characterAtStartIndex)) {
+            start++;
         }
-        return result;
+        return start;
     }
+
+        /**
+     * Returns the relative caret position in the editable translation for a
+     * given absolute index into the overall editor document.
+     */
+    public static int getPositionInEntryTranslation(EditorTextArea3 editor, int pos) {
+ 
+        if (!editor.getOmDocument().isEditMode()) {
+            return -1;
+        }
+        int beg = editor.getOmDocument().getTranslationStart();
+        int end = editor.getOmDocument().getTranslationEnd();
+        if (pos < beg) {
+            pos = beg;
+        }
+        if (pos > end) {
+            pos = end;
+        }
+        return pos - beg;
+    }
+
+
 
     /**
      * Determines the end of a word for the given model location. This method
