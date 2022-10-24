@@ -124,7 +124,6 @@ import org.omegat.util.gui.StaticUIUtils;
 import org.omegat.util.gui.UIDesignManager;
 import org.omegat.util.gui.UIThreadsUtil;
 import org.omegat.util.Token;
-import org.omegat.tokenizer.ITokenizer.StemmingMode;
 import com.vlsolutions.swing.docking.DockingDesktop;
 
 /**
@@ -1672,42 +1671,11 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
-                start = EditorUtils.getWordStart(editor, start);
-                end = EditorUtils.getWordEnd(editor, end);
-                
-                
-                // Use the project's target tokenizer to determine the word that was
-                // right-clicked.
-                // EditorUtils.getWordEnd() and getWordStart() use Java's built-in BreakIterator
-                // under the hood, which leads to inconsistent results when compared to other
-                // spell-
-                // checking functionality in OmegaT.
-                String translation = this.getCurrentTranslation();
-
-                Token tok = null;
-                int relOffset = this.getPositionInEntryTranslation(caretPosition);
-                for (Token t : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                        StemmingMode.NONE)) {
-                    if (t.getOffset() <= relOffset && relOffset < t.getOffset() + t.getLength()) {
-                        tok = t;
-                        break;
-                    }
-                }
+                int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
+                Token token = EditorUtils.getTokenFromPosition(editor, caretPosition);
                 // The wordStart must be the absolute offset in the Editor document.
-                start = caretPosition - relOffset + tok.getOffset();
-                // start = tok.getOffset();
-                end = start + tok.getLength();
-    
-
-                // BreakIterator breaker = DefaultTokenizer.getWordBreaker();
-                // OR
-                // Locale locale = Locale.UK;
-                // BreakIterator breakIterator =
-                // BreakIterator.getWordInstance(locale);
-                // look at autocompleter files
-                // for (Token t :
-                // Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                // StemmingMode.NONE)) {
+                start = caretPosition - relativeOffset + token.getOffset();
+                end = start + token.getLength();
 
                 // adjust the bound again
                 if (start < translationStart && end <= translationEnd) {
