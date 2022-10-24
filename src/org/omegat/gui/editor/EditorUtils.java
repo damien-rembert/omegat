@@ -67,108 +67,6 @@ public final class EditorUtils {
      * @return
      * @throws BadLocationException
      */
-    public static int getWordStartNew(EditorTextArea3 editor, int offset) throws BadLocationException {
-        String translation = editor.getOmDocument().extractTranslation();
-        Token token = null;
-        int relativeOffset = getPositionInEntryTranslation(editor, offset);
-        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                StemmingMode.NONE)) {
-            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
-                token = currentToken;
-                break;
-            }
-        }
-        int start = offset - relativeOffset + token.getOffset();
-        char characterAtStartIndex = editor.getDocument().getText(start, 1).charAt(0);
-        if (isDirectionChar(characterAtStartIndex)) {
-            start++;
-        }
-        return start;
-    }
-
-    /**
-     * Determines the start of a word for the given model location. This method
-     * skips direction char.
-     *
-     * @param editor
-     * @param offset
-     * @return
-     * @throws BadLocationException
-     */
-    public static int getWordEndNew(EditorTextArea3 editor, int offset) throws BadLocationException {
-        String translation = editor.getOmDocument().extractTranslation();
-        Token token = null;
-        int relativeOffset = getPositionInEntryTranslation(editor, offset);
-        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                StemmingMode.NONE)) {
-            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
-                token = currentToken;
-                break;
-            }
-        }
-        int start = offset - relativeOffset + token.getOffset();
-        int end = start + token.getLength();
-        if (end > 0) {
-            char characterAtEndIndex = editor.getDocument().getText(end, 1).charAt(0);
-            if (isDirectionChar(characterAtEndIndex)) {
-                end--;
-            }
-        }
-        return end;
-    }
-
-
-    /**
-     * Determines the start of a word for the given model location. This method
-     * skips direction char.
-     *
-     * TODO: change to use document's locale
-     *
-     * @param c
-     * @param offs
-     * @return
-     * @throws BadLocationException
-     */
-    public static int getWordStart(JTextComponent c, int offs) throws BadLocationException {
-        int result = Utilities.getWordStart(c, offs);
-        char ch = c.getDocument().getText(result, 1).charAt(0);
-        if (isDirectionChar(ch)) {
-            result++;
-        }
-        return result;
-    }
-
-    /**
-     * Determines the end of a word for the given model location. This method
-     * skips direction char.
-     *
-     * TODO: change to use document's locale
-     *
-     * @param c
-     * @param offs
-     * @return
-     * @throws BadLocationException
-     */
-    public static int getWordEnd(JTextComponent c, int offs) throws BadLocationException {
-        int result = Utilities.getWordEnd(c, offs);
-        if (result > 0) {
-            char ch = c.getDocument().getText(result - 1, 1).charAt(0);
-            if (isDirectionChar(ch)) {
-                result--;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Determines the start of a word for the given model location. This method
-     * skips direction char.
-     *
-     * @param editor
-     * @param offset
-     * @return
-     * @throws BadLocationException
-     */
     public static Token getTokenFromPosition(EditorTextArea3 editor, int offset) throws BadLocationException {
         String translation = editor.getOmDocument().extractTranslation();
         Token token = null;
@@ -201,18 +99,6 @@ public final class EditorUtils {
             pos = end;
         }
         return pos - beg;
-    }
-
-
-    /**
-     * Check if char is direction char(u202A,u202B,u202C).
-     *
-     * @param ch
-     *            char to check
-     * @return true if it's direction char
-     */
-    private static boolean isDirectionChar(final char ch) {
-        return ch == '\u202A' || ch == '\u202B' || ch == '\u202C' || ch == '\u200E' || ch == '\u200F';
     }
 
     /**
