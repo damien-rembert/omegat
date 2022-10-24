@@ -208,7 +208,7 @@ public final class EditorUtils {
      * Check if char is direction char(u202A,u202B,u202C).
      *
      * @param ch
-     *           char to check
+     *            char to check
      * @return true if it's direction char
      */
     private static boolean isDirectionChar(final char ch) {
@@ -219,7 +219,7 @@ public final class EditorUtils {
      * Remove invisible direction chars from string.
      *
      * @param text
-     *             string with direction chars
+     *            string with direction chars
      * @return string without direction chars
      */
     public static String removeDirectionChars(String text) {
@@ -230,7 +230,7 @@ public final class EditorUtils {
      * Remove bidi chars around tags only.
      *
      * @param text
-     *             string with direction chars
+     *            string with direction chars
      * @return string without direction chars
      */
     public static String removeDirectionCharsAroundTags(String text, SourceTextEntry ste) {
@@ -258,9 +258,9 @@ public final class EditorUtils {
      * language values.
      *
      * @param input
-     *               The string to change
+     *            The string to change
      * @param toWhat
-     *               The case to change to, or {@link CHANGE_CASE_TO#CYCLE}
+     *            The case to change to, or {@link CHANGE_CASE_TO#CYCLE}
      * @return The modified string
      */
     public static String doChangeCase(String input, CHANGE_CASE_TO toWhat) {
@@ -275,13 +275,13 @@ public final class EditorUtils {
      * > TITLE > UPPER.
      *
      * @param input
-     *                  The string to change
+     *            The string to change
      * @param toWhat
-     *                  The case to change to, or {@link CHANGE_CASE_TO#CYCLE}
+     *            The case to change to, or {@link CHANGE_CASE_TO#CYCLE}
      * @param locale
-     *                  The locale of the input string
+     *            The locale of the input string
      * @param tokenizer
-     *                  A tokenizer for the input string language
+     *            A tokenizer for the input string language
      * @return The modified string
      */
     public static String doChangeCase(String input, CHANGE_CASE_TO toWhat, Locale locale, ITokenizer tokenizer) {
@@ -423,16 +423,12 @@ public final class EditorUtils {
     }
 
     /**
-     * Convenience method for
-     * {@link #replaceGlossaryEntries(String, List, Locale, ITokenizer)}. Glossary
-     * entries are
-     * retrieved from {@code GlossaryManager}; the locale and tokenizer are taken
-     * from the project's current values for
+     * Convenience method for {@link #replaceGlossaryEntries(String, List, Locale, ITokenizer)}. Glossary entries are
+     * retrieved from {@code GlossaryManager}; the locale and tokenizer are taken from the project's current values for
      * the source language.
      *
      * @param text
-     *             Text in which to replace glossary hits. Assumed to be in the
-     *             project's source language.
+     *            Text in which to replace glossary hits. Assumed to be in the project's source language.
      * @return Text with source glossary terms replaced with target terms
      */
     public static String replaceGlossaryEntries(String text) {
@@ -443,21 +439,17 @@ public final class EditorUtils {
     }
 
     /**
-     * Given a list of glossary entries, replace any instances of the source term
-     * appearing in the given text with the
+     * Given a list of glossary entries, replace any instances of the source term appearing in the given text with the
      * target term. When there are multiple target terms, the first one is used.
      *
      * @param text
-     *                  Text in which to replace glossary hits (assumed to be in the
-     *                  project's source language)
+     *            Text in which to replace glossary hits (assumed to be in the project's source language)
      * @param entries
-     *                  List of glossary entries
+     *            List of glossary entries
      * @param locale
-     *                  Locale with which to perform capitalization matching
-     *                  (assumed to be source locale)
+     *            Locale with which to perform capitalization matching (assumed to be source locale)
      * @param tokenizer
-     *                  Tokenizer with which to split text (assumed to be project's
-     *                  source tokenizer)
+     *            Tokenizer with which to split text (assumed to be project's source tokenizer)
      * @return Text with source glossary terms replaced with target terms
      */
     public static String replaceGlossaryEntries(String text, List<GlossaryEntry> entries, Locale locale,
@@ -475,8 +467,7 @@ public final class EditorUtils {
                 if (tokensPresentAt(needle, haystack, i, true)) {
                     String toAppend = e.getLocText();
                     if (!tokensPresentAt(needle, haystack, i, false)) {
-                        // If the source tokens don't have matching case, fix the replacement's case to
-                        // match
+                        // If the source tokens don't have matching case, fix the replacement's case to match
                         toAppend = StringUtil.matchCapitalization(toAppend, tok, locale);
                     }
                     sb.append(toAppend);
