@@ -1674,6 +1674,9 @@ public class EditorController implements IEditor {
                 int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
                 Token token = EditorUtils.getTokenFromPosition(editor, caretPosition);
                 // The wordStart must be the absolute offset in the Editor document.
+                if (token == null) {
+                    return;
+                }
                 start = caretPosition - relativeOffset + token.getOffset();
                 end = start + token.getLength();
 

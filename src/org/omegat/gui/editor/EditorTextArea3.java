@@ -70,6 +70,7 @@ import org.omegat.gui.shortcuts.PropertiesShortcuts;
 import org.omegat.util.Java8Compat;
 import org.omegat.util.OStrings;
 import org.omegat.util.StringUtil;
+import org.omegat.util.Token;
 import org.omegat.util.gui.StaticUIUtils;
 import org.omegat.util.gui.Styles;
 import org.omegat.util.gui.UIDesignManager;
@@ -172,8 +173,16 @@ public class EditorTextArea3 extends JEditorPane {
 
         addCaretListener(e -> {
             try {
-                int start = EditorUtils.getWordStart(EditorTextArea3.this, e.getMark());
-                int end = EditorUtils.getWordEnd(EditorTextArea3.this, e.getMark());
+                int caretPosition = e.getMark();
+                int relativeOffset = this.controller.getPositionInEntryTranslation(caretPosition);
+                Token token = EditorUtils.getTokenFromPosition(EditorTextArea3.this, caretPosition);
+                if (token == null) {
+                    return;
+                }
+
+                // The wordStart must be the absolute offset in the Editor document.
+                int start = caretPosition - relativeOffset + token.getOffset();
+                int end = start + token.getLength();
                 if (end - start <= 0) {
                     // word not defined
                     return;
