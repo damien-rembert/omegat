@@ -62,24 +62,12 @@ public final class EditorUtils {
      * Determines the start of a word for the given model location. This method
      * skips direction char.
      *
-     * TODO: change to use target document's locale
-     *
-     * @param c
-     * @param offs
+     * @param editor
+     * @param offset
      * @return
      * @throws BadLocationException
      */
-    // this seems to be where things happen
-    // getWordStart uses BreakIterator.getWordInstance() to actually get the words
-    public static int getWordStart(EditorTextArea3 editor, int offset) throws BadLocationException {
-
-        // Use the project's target tokenizer to determine the word that was
-        // right-clicked.
-        // EditorUtils.getWordEnd() and getWordStart() use Java's built-in BreakIterator
-        // under the hood, which leads to inconsistent results when compared to other
-        // spell-
-        // checking functionality in OmegaT.
-        // String translation = editor.getDocument().getText(offset, offset);
+    public static int getWordStartNew(EditorTextArea3 editor, int offset) throws BadLocationException {
         String translation = editor.getOmDocument().extractTranslation();
         Token token = null;
         int relativeOffset = getPositionInEntryTranslation(editor, offset);
@@ -90,19 +78,7 @@ public final class EditorUtils {
                 break;
             }
         }
-        // The wordStart must be the absolute offset in the Editor document.
         int start = offset - relativeOffset + token.getOffset();
-        // start = tok.getOffset();
-        
-        // BreakIterator breaker = DefaultTokenizer.getWordBreaker();
-        // OR
-        // Locale locale = Locale.UK;
-        // BreakIterator breakIterator =
-        // BreakIterator.getWordInstance(locale);
-        // look at autocompleter files
-        // for (Token t :
-        // Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-        // StemmingMode.NONE)) {
         char characterAtStartIndex = editor.getDocument().getText(start, 1).charAt(0);
         if (isDirectionChar(characterAtStartIndex)) {
             start++;
@@ -110,27 +86,57 @@ public final class EditorUtils {
         return start;
     }
 
-        /**
-     * Returns the relative caret position in the editable translation for a
-     * given absolute index into the overall editor document.
+    /**
+     * Determines the start of a word for the given model location. This method
+     * skips direction char.
+     *
+     * @param editor
+     * @param offset
+     * @return
+     * @throws BadLocationException
      */
-    public static int getPositionInEntryTranslation(EditorTextArea3 editor, int pos) {
- 
-        if (!editor.getOmDocument().isEditMode()) {
-            return -1;
+    public static int getWordEndNew(EditorTextArea3 editor, int offset) throws BadLocationException {
+        String translation = editor.getOmDocument().extractTranslation();
+        Token token = null;
+        int relativeOffset = getPositionInEntryTranslation(editor, offset);
+        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
+                token = currentToken;
+                break;
+            }
         }
-        int beg = editor.getOmDocument().getTranslationStart();
-        int end = editor.getOmDocument().getTranslationEnd();
-        if (pos < beg) {
-            pos = beg;
+        int start = offset - relativeOffset + token.getOffset();
+        int end = start + token.getLength();
+        if (end > 0) {
+            char characterAtEndIndex = editor.getDocument().getText(end, 1).charAt(0);
+            if (isDirectionChar(characterAtEndIndex)) {
+                end--;
+            }
         }
-        if (pos > end) {
-            pos = end;
-        }
-        return pos - beg;
+        return end;
     }
 
 
+    /**
+     * Determines the start of a word for the given model location. This method
+     * skips direction char.
+     *
+     * TODO: change to use document's locale
+     *
+     * @param c
+     * @param offs
+     * @return
+     * @throws BadLocationException
+     */
+    public static int getWordStart(JTextComponent c, int offs) throws BadLocationException {
+        int result = Utilities.getWordStart(c, offs);
+        char ch = c.getDocument().getText(result, 1).charAt(0);
+        if (isDirectionChar(ch)) {
+            result++;
+        }
+        return result;
+    }
 
     /**
      * Determines the end of a word for the given model location. This method
@@ -153,6 +159,50 @@ public final class EditorUtils {
         }
         return result;
     }
+
+    /**
+     * Determines the start of a word for the given model location. This method
+     * skips direction char.
+     *
+     * @param editor
+     * @param offset
+     * @return
+     * @throws BadLocationException
+     */
+    public static Token getTokenFromPosition(EditorTextArea3 editor, int offset) throws BadLocationException {
+        String translation = editor.getOmDocument().extractTranslation();
+        Token token = null;
+        int relativeOffset = getPositionInEntryTranslation(editor, offset);
+        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
+                token = currentToken;
+                break;
+            }
+        }
+        return token;
+    }
+
+    /**
+     * Returns the relative caret position in the editable translation for a
+     * given absolute index into the overall editor document.
+     */
+    public static int getPositionInEntryTranslation(EditorTextArea3 editor, int pos) {
+ 
+        if (!editor.getOmDocument().isEditMode()) {
+            return -1;
+        }
+        int beg = editor.getOmDocument().getTranslationStart();
+        int end = editor.getOmDocument().getTranslationEnd();
+        if (pos < beg) {
+            pos = beg;
+        }
+        if (pos > end) {
+            pos = end;
+        }
+        return pos - beg;
+    }
+
 
     /**
      * Check if char is direction char(u202A,u202B,u202C).
