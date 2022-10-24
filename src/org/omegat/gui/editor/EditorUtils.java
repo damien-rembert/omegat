@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.Utilities;
 
 import org.omegat.core.Core;
 import org.omegat.core.data.ProtectedPart;
@@ -59,8 +57,7 @@ public final class EditorUtils {
     }
 
     /**
-     * Determines the start of a word for the given model location. This method
-     * skips direction char.
+     * Returns the token found at the given model location.
      *
      * @param editor
      * @param offset
@@ -73,7 +70,8 @@ public final class EditorUtils {
         int relativeOffset = getPositionInEntryTranslation(editor, offset);
         for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
                 StemmingMode.NONE)) {
-            if (currentToken.getOffset() <= relativeOffset && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
+            if (currentToken.getOffset() <= relativeOffset
+                    && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
                 token = currentToken;
                 break;
             }
