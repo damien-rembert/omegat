@@ -45,7 +45,6 @@ import javax.swing.text.JTextComponent;
 import org.omegat.core.Core;
 import org.omegat.core.data.SourceTextEntry;
 import org.omegat.core.spellchecker.SpellCheckerMarker;
-import org.omegat.tokenizer.ITokenizer.StemmingMode;
 import org.omegat.util.Log;
 import org.omegat.util.OStrings;
 import org.omegat.util.StringUtil;
