@@ -176,18 +176,13 @@ public class EditorTextArea3 extends JEditorPane {
                 int caretPosition = e.getMark();
                 int relativeOffset = this.controller.getPositionInEntryTranslation(caretPosition);
                 Token token = EditorUtils.getTokenFromPosition(EditorTextArea3.this, caretPosition);
-                if (token == null) {
+                if (token.getLength() == 0) {
                     return;
                 }
 
                 // The wordStart must be the absolute offset in the Editor document.
                 int start = caretPosition - relativeOffset + token.getOffset();
-                int end = start + token.getLength();
-                if (end - start <= 0) {
-                    // word not defined
-                    return;
-                }
-                String newWord = getText(start, end - start);
+                String newWord = getText(start, token.getLength());
                 if (!newWord.equals(currentWord)) {
                     currentWord = newWord;
                     CoreEvents.fireEditorNewWord(newWord);

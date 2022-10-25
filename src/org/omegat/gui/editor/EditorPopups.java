@@ -107,11 +107,10 @@ public final class EditorPopups {
             try {
                 token = EditorUtils.getTokenFromPosition(ec.editor, mousePosition);
             } catch (BadLocationException ble) {
-            Log.log("Bad location exception when adding items to the spellchecker popup:");
             Log.log(ble);
             }
 
-            if (token == null) {
+            if (token.getLength() == 0) {
                 return;
             }
 

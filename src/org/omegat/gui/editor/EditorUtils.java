@@ -76,6 +76,9 @@ public final class EditorUtils {
                 break;
             }
         }
+        if (token == null) {
+            token = new Token("", offset);
+        }
         return token;
     }
 
