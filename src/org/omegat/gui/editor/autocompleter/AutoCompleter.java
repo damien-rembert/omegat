@@ -95,7 +95,7 @@ public class AutoCompleter implements IAutoCompleter {
 
         scroll = new JScrollPane();
         scroll.setBorder(new EmptyBorder(0, 0, 0, 0));
-        scroll.setPreferredSize(new Dimension(700, 200));
+        scroll.setPreferredSize(new Dimension(200, 200));
         scroll.setColumnHeaderView(null);
         scroll.setFocusable(false);
 
