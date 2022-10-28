@@ -107,7 +107,7 @@ public final class EditorPopups {
             try {
                 token = EditorUtils.getTokenFromPosition(ec.editor, mousePosition);
             } catch (BadLocationException ble) {
-            Log.log(ble);
+                Log.log(ble);
             }
 
             if (token.getLength() == 0) {

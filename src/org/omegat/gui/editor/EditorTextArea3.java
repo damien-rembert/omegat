@@ -175,6 +175,10 @@ public class EditorTextArea3 extends JEditorPane {
             try {
                 int caretPosition = e.getMark();
                 int relativeOffset = this.controller.getPositionInEntryTranslation(caretPosition);
+                if (relativeOffset < 0) {
+                    // handle getPositionInEntryTranslation() returning -1
+                    return;
+                }
                 Token token = EditorUtils.getTokenFromPosition(EditorTextArea3.this, caretPosition);
                 if (token.getLength() == 0) {
                     return;
