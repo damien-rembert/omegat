@@ -124,6 +124,7 @@ import org.omegat.util.gui.StaticUIUtils;
 import org.omegat.util.gui.UIDesignManager;
 import org.omegat.util.gui.UIThreadsUtil;
 import org.omegat.util.Token;
+
 import com.vlsolutions.swing.docking.DockingDesktop;
 
 /**
