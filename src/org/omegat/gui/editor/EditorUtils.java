@@ -65,8 +65,8 @@ public final class EditorUtils {
      * @throws BadLocationException
      */
     public static Token getTokenFromPosition(EditorTextArea3 editor, int offset) throws BadLocationException {
-        String translation = editor.getOmDocument().extractTranslation();
         Token token = null;
+        String translation = editor.getOmDocument().extractTranslation();
         int relativeOffset = getPositionInEntryTranslation(editor, offset);
         for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
                 StemmingMode.NONE)) {
