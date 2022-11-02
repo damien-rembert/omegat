@@ -30,7 +30,6 @@ package org.omegat.gui.editor;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.text.BadLocationException;
 
 import org.omegat.core.Core;
 import org.omegat.core.data.ProtectedPart;
@@ -42,7 +41,6 @@ import org.omegat.util.StringUtil;
 import org.omegat.util.TagUtil;
 import org.omegat.util.TagUtil.Tag;
 import org.omegat.util.Token;
-import org.omegat.tokenizer.ITokenizer.StemmingMode;
 
 /**
  * Some utilities methods.
@@ -56,51 +54,6 @@ public final class EditorUtils {
     private EditorUtils() {
     }
 
-    /**
-     * Returns the token found at the given model location.
-     *
-     * @param editor
-     * @param offset
-     * @return
-     * @throws BadLocationException
-     */
-    public static Token getTokenFromPosition(EditorTextArea3 editor, int offset) throws BadLocationException {
-        Token token = null;
-        String translation = editor.getOmDocument().extractTranslation();
-        int relativeOffset = getPositionInEntryTranslation(editor, offset);
-        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                StemmingMode.NONE)) {
-            if (currentToken.getOffset() <= relativeOffset
-                    && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
-                token = currentToken;
-                break;
-            }
-        }
-        if (token == null) {
-            token = new Token("", offset);
-        }
-        return token;
-    }
-
-    /**
-     * Returns the relative caret position in the editable translation for a
-     * given absolute index into the overall editor document.
-     */
-    public static int getPositionInEntryTranslation(EditorTextArea3 editor, int pos) {
- 
-        if (!editor.getOmDocument().isEditMode()) {
-            return -1;
-        }
-        int beg = editor.getOmDocument().getTranslationStart();
-        int end = editor.getOmDocument().getTranslationEnd();
-        if (pos < beg) {
-            pos = beg;
-        }
-        if (pos > end) {
-            pos = end;
-        }
-        return pos - beg;
-    }
 
     /**
      * Remove invisible direction chars from string.

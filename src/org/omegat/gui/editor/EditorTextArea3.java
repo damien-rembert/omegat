@@ -67,6 +67,7 @@ import org.omegat.core.data.ProtectedPart;
 import org.omegat.core.data.SourceTextEntry;
 import org.omegat.gui.editor.autocompleter.AutoCompleter;
 import org.omegat.gui.shortcuts.PropertiesShortcuts;
+import org.omegat.tokenizer.ITokenizer.StemmingMode;
 import org.omegat.util.Java8Compat;
 import org.omegat.util.OStrings;
 import org.omegat.util.StringUtil;
@@ -174,12 +175,12 @@ public class EditorTextArea3 extends JEditorPane {
         addCaretListener(e -> {
             try {
                 int caretPosition = e.getMark();
-                int relativeOffset = this.controller.getPositionInEntryTranslation(caretPosition);
+                int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
                 if (relativeOffset < 0) {
                     // handle getPositionInEntryTranslation() returning -1
                     return;
                 }
-                Token token = EditorUtils.getTokenFromPosition(EditorTextArea3.this, caretPosition);
+                Token token = this.getTokenFromPosition(caretPosition);
                 if (token.getLength() == 0) {
                     return;
                 }
@@ -232,8 +233,8 @@ public class EditorTextArea3 extends JEditorPane {
      * @return
      */
     public boolean isInActiveTranslation(int position) {
-        return (position >= getOmDocument().getTranslationStart()
-                && position <= getOmDocument().getTranslationEnd());
+        return (position >= this.getStartOfCurrentTranslation()
+                && position <= this.getEndOfCurrentTranslation());
     }
 
     protected final transient MouseListener mouseListener = new MouseAdapter() {
@@ -831,12 +832,68 @@ public class EditorTextArea3 extends JEditorPane {
         }
     }
 
+    /**
+     * Returns the token found at the given location.
+     *
+     * @param offset
+     * @return
+     * @throws BadLocationException
+     */
+    // remove errors
+    public Token getTokenFromPosition(int offset) throws BadLocationException {
+        Token token = null;
+        String translation = this.getOmDocument().extractTranslation();
+        int relativeOffset = this.getPositionInEntryTranslation(offset);
+        // add
+        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= relativeOffset
+                    && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
+                token = currentToken;
+                break;
+            }
+        }
+        if (token == null) {
+            token = new Token("", offset);
+        }
+        return token;
+    }
+
+    /**
+     * Returns the relative caret position in the editable translation for a
+     * given absolute index into the overall editor document.
+     */
+    public int getPositionInEntryTranslation(int position) {
+
+        // remove return -1
+        if (!this.getOmDocument().isEditMode()) {
+            return -1;
+        }
+        int start = this.getStartOfCurrentTranslation();
+        int end = this.getEndOfCurrentTranslation();
+        if (position < start) {
+            position = start;
+        }
+        if (position > end) {
+            position = end;
+        }
+        return position - start;
+    }
+
+    public int getStartOfCurrentTranslation() {
+        return this.getOmDocument().getTranslationStart();
+    }
+
+    public int getEndOfCurrentTranslation() {
+        return this.getOmDocument().getTranslationEnd();
+    }
+
     @Override
     public void replaceSelection(String content) {
         // Overwrite current selection, and if at the end of the segment, allow
         // inserting new text.
         if (isEditable() && overtypeMode && getSelectionStart() == getSelectionEnd()
-                && getCaretPosition() < getOmDocument().getTranslationEnd()) {
+                && getCaretPosition() < this.getEndOfCurrentTranslation()) {
             int pos = getCaretPosition();
             int lastPos = Math.min(getDocument().getLength(), pos + content.length());
             select(pos, lastPos);
