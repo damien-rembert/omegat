@@ -67,7 +67,6 @@ import org.omegat.core.data.ProtectedPart;
 import org.omegat.core.data.SourceTextEntry;
 import org.omegat.gui.editor.autocompleter.AutoCompleter;
 import org.omegat.gui.shortcuts.PropertiesShortcuts;
-import org.omegat.tokenizer.ITokenizer.StemmingMode;
 import org.omegat.util.Java8Compat;
 import org.omegat.util.OStrings;
 import org.omegat.util.StringUtil;
@@ -839,23 +838,10 @@ public class EditorTextArea3 extends JEditorPane {
      * @return
      * @throws BadLocationException
      */
-    // remove errors
     public Token getTokenFromPosition(int offset) throws BadLocationException {
-        Token token = null;
         String translation = this.getOmDocument().extractTranslation();
         int relativeOffset = this.getPositionInEntryTranslation(offset);
-        // add
-        for (Token currentToken : Core.getProject().getTargetTokenizer().tokenizeWords(translation,
-                StemmingMode.NONE)) {
-            if (currentToken.getOffset() <= relativeOffset
-                    && relativeOffset < currentToken.getOffset() + currentToken.getLength()) {
-                token = currentToken;
-                break;
-            }
-        }
-        if (token == null) {
-            token = new Token("", offset);
-        }
+        Token token = Core.getProject().getTargetTokenizer().getTokenFromPosition(relativeOffset, translation);
         return token;
     }
 
@@ -864,8 +850,6 @@ public class EditorTextArea3 extends JEditorPane {
      * given absolute index into the overall editor document.
      */
     public int getPositionInEntryTranslation(int position) {
-
-        // remove return -1
         if (!this.getOmDocument().isEditMode()) {
             return -1;
         }

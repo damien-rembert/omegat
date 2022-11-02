@@ -186,5 +186,21 @@ public class TagAutoCompleterView extends AutoCompleterListView {
         public String[] getSupportedLanguages() {
             return null;
         }
+
+        @Override
+        public Token getTokenFromPosition(int position, String string) {
+            Token token = new Token("", position);
+            if (position < 0 || position > string.length() - 1) {
+                return token;
+            }
+            for (Token currentToken : tokenizeWords(string,
+                    StemmingMode.NONE)) {
+                if (currentToken.getOffset() <= position
+                        && position < currentToken.getOffset() + currentToken.getLength()) {
+                    return currentToken;
+                }
+            }
+            return token;
+        }
     }
 }

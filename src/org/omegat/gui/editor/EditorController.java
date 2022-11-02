@@ -1658,7 +1658,7 @@ public class EditorController implements IEditor {
 
         // both should be within the limits
         if (end < translationStart || start > translationEnd) {
-            return; // forget it, not worth the effort
+            return; // caret outside of current translation
         }
 
         // adjust the bound which exceeds the limits
@@ -1673,6 +1673,7 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
+
 
 
 

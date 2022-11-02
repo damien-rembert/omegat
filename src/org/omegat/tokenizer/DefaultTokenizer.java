@@ -419,10 +419,24 @@ public class DefaultTokenizer implements ITokenizer {
         return -1;
     }
 
-
-
     @Override
     public String[] getSupportedLanguages() {
         return new String[0];
+    }
+
+    @Override
+    public Token getTokenFromPosition(int position, String string) {
+        Token token = new Token("", position);
+        if (position < 0 || position > string.length() - 1) {
+            return token;
+        }
+        for (Token currentToken : tokenizeWords(string,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= position
+                    && position < currentToken.getOffset() + currentToken.getLength()) {
+                return currentToken;
+            }
+        }
+        return token;
     }
 }
