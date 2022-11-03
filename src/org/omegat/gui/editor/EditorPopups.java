@@ -103,9 +103,9 @@ public final class EditorPopups {
 
             String translation = ec.getCurrentTranslation();
             Token token = null;
-            int relativeOffset = ec.editor.getPositionInEntryTranslation(mousePosition);
+            int relativeOffset = ec.getPositionInEntryTranslation(mousePosition);
             try {
-                token = ec.editor.getTokenFromPosition(mousePosition);
+                token = ec.getTokenFromPosition(mousePosition);
             } catch (BadLocationException ble) {
                 Log.log(ble);
             }

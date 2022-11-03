@@ -174,12 +174,12 @@ public class EditorTextArea3 extends JEditorPane {
         addCaretListener(e -> {
             try {
                 int caretPosition = e.getMark();
-                int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
+                int relativeOffset = controller.getPositionInEntryTranslation(caretPosition);
                 if (relativeOffset < 0) {
                     // handle getPositionInEntryTranslation() returning -1
                     return;
                 }
-                Token token = this.getTokenFromPosition(caretPosition);
+                Token token = controller.getTokenFromPosition(caretPosition);
                 if (token.getLength() == 0) {
                     return;
                 }
@@ -827,39 +827,6 @@ public class EditorTextArea3 extends JEditorPane {
             this.priority = priority;
             this.constructor = constructor;
         }
-    }
-
-    /**
-     * Returns the token found at the given location.
-     *
-     * @param offset
-     * @return
-     * @throws BadLocationException
-     */
-    public Token getTokenFromPosition(int offset) throws BadLocationException {
-        String translation = this.getOmDocument().extractTranslation();
-        int relativeOffset = this.getPositionInEntryTranslation(offset);
-        Token token = Core.getProject().getTargetTokenizer().getTokenFromPosition(relativeOffset, translation);
-        return token;
-    }
-
-    /**
-     * Returns the relative caret position in the editable translation for a
-     * given absolute index into the overall editor document.
-     */
-    public int getPositionInEntryTranslation(int position) {
-        if (!this.getOmDocument().isEditMode()) {
-            return -1;
-        }
-        int start = this.getStartOfCurrentTranslation();
-        int end = this.getEndOfCurrentTranslation();
-        if (position < start) {
-            position = start;
-        }
-        if (position > end) {
-            position = end;
-        }
-        return position - start;
     }
 
     public int getStartOfCurrentTranslation() {

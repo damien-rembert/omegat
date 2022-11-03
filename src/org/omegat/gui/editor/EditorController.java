@@ -934,8 +934,7 @@ public class EditorController implements IEditor {
      * Display length of source and translation parts in the status bar.
      */
     void showLengthMessage() {
-        Document3 doc = editor.getOmDocument();
-        String trans = doc.extractTranslation();
+        String trans = getCurrentTranslation();
         if (trans != null) {
             SourceTextEntry ste = m_docSegList[displayedEntryIndex].ste;
             String lMsg = " " + ste.getSrcText().length() + "/" + trans.length() + " ";
@@ -1328,7 +1327,7 @@ public class EditorController implements IEditor {
     //
     // Memorize current position of cursor.
     // After deactivating and activating with shrinking and expanding text, we might
-    // be able to position the current at this position again.
+    // be able to position the cursor at this position again.
     //
         int currentPosition = getCurrentPositionInEntryTranslation();
         commitAndDeactivate();
@@ -1673,8 +1672,8 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
-                int relativeOffset = editor.getPositionInEntryTranslation(caretPosition);
-                Token token = editor.getTokenFromPosition(caretPosition);
+                int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
+                Token token = this.getTokenFromPosition(caretPosition);
 
                 if (token.getLength() == 0) {
                     return;
@@ -1808,21 +1807,21 @@ public class EditorController implements IEditor {
      * Returns the relative caret position in the editable translation for a
      * given absolute index into the overall editor document.
      */
-    public int getPositionInEntryTranslation(int pos) {
+    public int getPositionInEntryTranslation(int position) {
         UIThreadsUtil.mustBeSwingThread();
 
         if (!editor.getOmDocument().isEditMode()) {
             return -1;
         }
-        int beg = editor.getStartOfCurrentTranslation();
-        int end = editor.getEndOfCurrentTranslation();
-        if (pos < beg) {
-            pos = beg;
+        int start = this.getStartOfCurrentTranslation();
+        int end = this.getEndOfCurrentTranslation();
+        if (position < start) {
+            position = start;
         }
-        if (pos > end) {
-            pos = end;
+        if (position > end) {
+            position = end;
         }
-        return pos - beg;
+        return position - start;
     }
 
     public void setCaretPosition(CaretPosition pos) {
@@ -2240,4 +2239,29 @@ public class EditorController implements IEditor {
     public IAutoCompleter getAutoCompleter() {
         return editor.autoCompleter;
     }
+
+
+    /**
+     * Returns the token found at the given location.
+     *
+     * @param offset
+     * @return
+     * @throws BadLocationException
+     */
+    public Token getTokenFromPosition(int offset) throws BadLocationException {
+        String translation = getCurrentTranslation();
+        int relativeOffset = this.getPositionInEntryTranslation(offset);
+        Token token = Core.getProject().getTargetTokenizer().getTokenFromPosition(relativeOffset, translation);
+        return token;
+    }
+
+
+    public int getStartOfCurrentTranslation() {
+        return editor.getStartOfCurrentTranslation();
+    }
+
+    public int getEndOfCurrentTranslation() {
+        return editor.getEndOfCurrentTranslation();
+    }
+
 }
