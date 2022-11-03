@@ -1673,16 +1673,9 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
-
-
-
-
-            // REPLACE all this with
-            // editor.setSelectionToCurrentWord
-
                 int relativeOffset = editor.getPositionInEntryTranslation(caretPosition);
                 Token token = editor.getTokenFromPosition(caretPosition);
-                // The wordStart must be the absolute offset in the Editor document.
+
                 if (token.getLength() == 0) {
                     return;
                 }

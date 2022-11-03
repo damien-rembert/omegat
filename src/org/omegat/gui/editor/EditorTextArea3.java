@@ -183,8 +183,6 @@ public class EditorTextArea3 extends JEditorPane {
                 if (token.getLength() == 0) {
                     return;
                 }
-
-                // The wordStart must be the absolute offset in the Editor document.
                 int start = caretPosition - relativeOffset + token.getOffset();
                 String newWord = getText(start, token.getLength());
                 if (!newWord.equals(currentWord)) {
@@ -927,4 +925,5 @@ public class EditorTextArea3 extends JEditorPane {
             }
         }
     }
+
 }
