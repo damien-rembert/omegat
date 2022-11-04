@@ -2248,7 +2248,7 @@ public class EditorController implements IEditor {
      */
     public Token getTokenFromPosition(int offset) throws BadLocationException {
         String translation = getCurrentTranslation();
-        int relativeOffset = this.getPositionInEntryTranslation(offset);
+        int relativeOffset = getPositionInEntryTranslation(offset);
         Token token = Core.getProject().getTargetTokenizer().getTokenFromPosition(relativeOffset, translation);
         return token;
     }

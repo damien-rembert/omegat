@@ -886,10 +886,10 @@ public class EditorTextArea3 extends JEditorPane {
     }
 
     public int getStartOfCurrentTranslation() {
-        return this.getOmDocument().getTranslationStart();
+        return getOmDocument().getTranslationStart();
     }
 
     public int getEndOfCurrentTranslation() {
-        return this.getOmDocument().getTranslationEnd();
+        return getOmDocument().getTranslationEnd();
     }
 }
