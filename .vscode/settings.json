@@ -1,0 +1,4 @@
+{
+	"java.format.settings.profile": "docs_devel/eclipse-formatting.xml",
+	"editor.formatOnType": true
+}
