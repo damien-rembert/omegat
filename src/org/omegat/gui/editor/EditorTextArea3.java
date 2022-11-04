@@ -230,8 +230,8 @@ public class EditorTextArea3 extends JEditorPane {
      * @return
      */
     public boolean isInActiveTranslation(int position) {
-        return (position >= this.getStartOfCurrentTranslation()
-                && position <= this.getEndOfCurrentTranslation());
+        return (position >= getStartOfCurrentTranslation()
+                && position <= getEndOfCurrentTranslation());
     }
 
     protected final transient MouseListener mouseListener = new MouseAdapter() {
@@ -842,7 +842,7 @@ public class EditorTextArea3 extends JEditorPane {
         // Overwrite current selection, and if at the end of the segment, allow
         // inserting new text.
         if (isEditable() && overtypeMode && getSelectionStart() == getSelectionEnd()
-                && getCaretPosition() < this.getEndOfCurrentTranslation()) {
+                && getCaretPosition() < getEndOfCurrentTranslation()) {
             int pos = getCaretPosition();
             int lastPos = Math.min(getDocument().getLength(), pos + content.length());
             select(pos, lastPos);
