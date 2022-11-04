@@ -458,4 +458,6 @@ public interface IEditor {
      * Access the AutoCompleter
      */
     IAutoCompleter getAutoCompleter();
+
+    CaretPosition getCaretPositionInEntryTranslation();
 }

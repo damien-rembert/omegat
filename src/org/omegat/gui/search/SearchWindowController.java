@@ -70,7 +70,6 @@ import org.omegat.core.search.SearchMode;
 import org.omegat.core.search.Searcher;
 import org.omegat.core.threads.SearchThread;
 import org.omegat.gui.editor.EditorController;
-import org.omegat.gui.editor.IEditor;
 import org.omegat.gui.editor.IEditor.CaretPosition;
 import org.omegat.gui.editor.IEditorFilter;
 import org.omegat.gui.editor.filter.ReplaceFilter;
@@ -117,7 +116,7 @@ public class SearchWindowController {
         form.setJMenuBar(new SearchWindowMenu(this));
         this.mode = mode;
         initialEntry = Core.getEditor().getCurrentEntryNumber();
-        initialCaret = getCurrentPositionInEntryTranslationInEditor(Core.getEditor());
+        initialCaret = Core.getEditor().getCaretPositionInEntryTranslation();
 
         if (Platform.isMacOSX()) {
             OSXIntegration.enableFullScreen(form);
@@ -1127,42 +1126,6 @@ public class SearchWindowController {
             if (c instanceof Container) {
                 setEnabled((Container) c, enabled);
             }
-        }
-    }
-
-    /*
-     * TODO: This should be a method on EditorController exposed via IEditor, NOT here.
-     */
-    private CaretPosition getCurrentPositionInEntryTranslationInEditor(IEditor editor) {
-        if (editor instanceof EditorController) {
-            EditorController c = (EditorController) editor;
-            int selectionEnd = c.getCurrentPositionInEntryTranslation();
-            String selection = c.getSelectedText();
-            String translation = c.getCurrentTranslation();
-
-            if (StringUtil.isEmpty(translation) || StringUtil.isEmpty(selection)) {
-                // no translation or no selection
-                return new CaretPosition(selectionEnd);
-            } else {
-                // get selected range
-                int selectionStart = selectionEnd;
-                int pos = 0;
-                do {
-                    pos = translation.indexOf(selection, pos);
-                    if (pos == selectionEnd) {
-                        selectionStart = pos;
-                        selectionEnd = pos + selection.length();
-                        break;
-                    } else if ((pos + selection.length()) == selectionEnd) {
-                        selectionStart = pos;
-                        break;
-                    }
-                    pos++;
-                } while (pos > 0);
-                return new CaretPosition(selectionStart, selectionEnd);
-            }
-        } else {
-            return CaretPosition.startOfEntry();
         }
     }
 

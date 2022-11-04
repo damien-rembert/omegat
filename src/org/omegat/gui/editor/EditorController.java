@@ -1803,6 +1803,34 @@ public class EditorController implements IEditor {
         return getPositionInEntryTranslation(editor.getCaretPosition());
     }
 
+    public CaretPosition getCaretPositionInEntryTranslation() {
+        int selectionEnd = getCurrentPositionInEntryTranslation();
+        String selection = getSelectedText();
+        String translation = getCurrentTranslation();
+
+        if (StringUtil.isEmpty(translation) || StringUtil.isEmpty(selection)) {
+            // no translation or no selection
+            return new CaretPosition(selectionEnd);
+        } else {
+            // get selected range
+            int selectionStart = selectionEnd;
+            int pos = 0;
+            do {
+                pos = translation.indexOf(selection, pos);
+                if (pos == selectionEnd) {
+                    selectionStart = pos;
+                    selectionEnd = pos + selection.length();
+                    break;
+                } else if ((pos + selection.length()) == selectionEnd) {
+                    selectionStart = pos;
+                    break;
+                }
+                pos++;
+            } while (pos > 0);
+            return new CaretPosition(selectionStart, selectionEnd);
+        }
+    }
+
     /**
      * Returns the relative caret position in the editable translation for a
      * given absolute index into the overall editor document.
