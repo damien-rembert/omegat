@@ -878,4 +878,12 @@ public class EditorTextArea3 extends JEditorPane {
             }
         }
     }
+
+    public int getStartOfCurrentTranslation() {
+        return this.getOmDocument().getTranslationStart();
+    }
+
+    public int getEndOfCurrentTranslation() {
+        return this.getOmDocument().getTranslationEnd();
+    }
 }
