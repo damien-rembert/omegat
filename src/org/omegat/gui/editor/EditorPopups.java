@@ -45,7 +45,6 @@ import javax.swing.text.JTextComponent;
 import org.omegat.core.Core;
 import org.omegat.core.data.SourceTextEntry;
 import org.omegat.core.spellchecker.SpellCheckerMarker;
-import org.omegat.tokenizer.ITokenizer.StemmingMode;
 import org.omegat.util.Log;
 import org.omegat.util.OStrings;
 import org.omegat.util.StringUtil;
@@ -91,7 +90,7 @@ public final class EditorPopups {
             this.ec = ec;
         }
 
-        public void addItems(JPopupMenu menu, final JTextComponent comp, int mousepos,
+        public void addItems(JPopupMenu menu, final JTextComponent comp, int mousePosition,
                 boolean isInActiveEntry, boolean isInActiveTranslation, SegmentBuilder sb) {
             if (!ec.getSettings().isAutoSpellChecking()) {
                 // spellchecker disabled
@@ -103,23 +102,22 @@ public final class EditorPopups {
             }
 
             String translation = ec.getCurrentTranslation();
-            Token tok = null;
-            int relOffset = ec.getPositionInEntryTranslation(mousepos);
-            for (Token t : Core.getProject().getTargetTokenizer().tokenizeWords(translation, StemmingMode.NONE)) {
-                if (t.getOffset() <= relOffset && relOffset < t.getOffset() + t.getLength()) {
-                    tok = t;
-                    break;
-                }
+            Token token = null;
+            int relativeOffset = ec.getPositionInEntryTranslation(mousePosition);
+            try {
+                token = ec.getTokenFromPosition(mousePosition);
+            } catch (BadLocationException ble) {
+                Log.log(ble);
             }
 
-            if (tok == null) {
+            if (token.getLength() == 0) {
                 return;
             }
 
-            final String word = tok.getTextFromString(translation);
+            final String word = token.getTextFromString(translation);
             // The wordStart must be the absolute offset in the Editor document.
-            final int wordStart = mousepos - relOffset + tok.getOffset();
-            final int wordLength = tok.getLength();
+            final int wordStart = mousePosition - relativeOffset + token.getOffset();
+            final int wordLength = token.getLength();
             final AbstractDocument xlDoc = (AbstractDocument) comp.getDocument();
 
             if (!Core.getSpellChecker().isCorrect(word)) {
