@@ -1672,8 +1672,8 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
-                int relativeOffset = this.getPositionInEntryTranslation(caretPosition);
-                Token token = this.getTokenFromPosition(caretPosition);
+                int relativeOffset = getPositionInEntryTranslation(caretPosition);
+                Token token = getTokenFromPosition(caretPosition);
 
                 if (token.getLength() == 0) {
                     return;
