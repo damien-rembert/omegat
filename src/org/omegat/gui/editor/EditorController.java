@@ -1327,7 +1327,7 @@ public class EditorController implements IEditor {
     //
     // Memorize current position of cursor.
     // After deactivating and activating with shrinking and expanding text, we might
-    // be able to position the current at this position again.
+    // be able to position the cursor at this position again.
     //
         int currentPosition = getCurrentPositionInEntryTranslation();
         commitAndDeactivate();
