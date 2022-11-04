@@ -118,6 +118,7 @@ import org.omegat.util.Preferences;
 import org.omegat.util.StaticUtils;
 import org.omegat.util.StringUtil;
 import org.omegat.util.TMXProp;
+import org.omegat.util.Token;
 import org.omegat.util.gui.DragTargetOverlay;
 import org.omegat.util.gui.DragTargetOverlay.IDropInfo;
 import org.omegat.util.gui.StaticUIUtils;
@@ -1652,12 +1653,12 @@ public class EditorController implements IEditor {
 
         int caretPosition = editor.getCaretPosition();
 
-        int translationStart = editor.getOmDocument().getTranslationStart();
-        int translationEnd = editor.getOmDocument().getTranslationEnd();
+        int translationStart = editor.getStartOfCurrentTranslation();
+        int translationEnd = editor.getEndOfCurrentTranslation();
 
         // both should be within the limits
         if (end < translationStart || start > translationEnd) {
-            return; // forget it, not worth the effort
+            return; // caret outside of current translation
         }
 
         // adjust the bound which exceeds the limits
@@ -1672,9 +1673,14 @@ public class EditorController implements IEditor {
         try {
             // no selection? make it the current word
             if (start == end) {
-                start = EditorUtils.getWordStart(editor, start);
-                end = EditorUtils.getWordEnd(editor, end);
+                int relativeOffset = getPositionInEntryTranslation(caretPosition);
+                Token token = getTokenFromPosition(caretPosition);
 
+                if (token.getLength() == 0) {
+                    return;
+                }
+                start = caretPosition - relativeOffset + token.getOffset();
+                end = start + token.getLength();
                 // adjust the bound again
                 if (start < translationStart && end <= translationEnd) {
                     start = translationStart;
@@ -2232,5 +2238,19 @@ public class EditorController implements IEditor {
     @Override
     public IAutoCompleter getAutoCompleter() {
         return editor.autoCompleter;
+    }
+
+    /**
+     * Returns the token found at the given location.
+     *
+     * @param offset
+     * @return
+     * @throws BadLocationException
+     */
+    public Token getTokenFromPosition(int offset) throws BadLocationException {
+        String translation = getCurrentTranslation();
+        int relativeOffset = this.getPositionInEntryTranslation(offset);
+        Token token = Core.getProject().getTargetTokenizer().getTokenFromPosition(relativeOffset, translation);
+        return token;
     }
 }
