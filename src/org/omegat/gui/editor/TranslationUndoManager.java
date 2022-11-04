@@ -116,7 +116,7 @@ public class TranslationUndoManager implements UndoableEditListener {
         try {
             editor.controller.replaceEditText(ch.text);
             if (ch.caretPos >= 0) {
-                editor.setCaretPosition(editor.getOmDocument().getTranslationStart() + ch.caretPos);
+                editor.setCaretPosition(editor.getStartOfCurrentTranslation() + ch.caretPos);
             }
         } finally {
             inProgress = false;
@@ -156,7 +156,7 @@ public class TranslationUndoManager implements UndoableEditListener {
             return;
         }
 
-        int caretPos = event.getOffset() - editor.getOmDocument().getTranslationStart();
+        int caretPos = event.getOffset() - editor.getStartOfCurrentTranslation();
         if (event.getType() == DocumentEvent.EventType.REMOVE) {
             caretPos += event.getLength();
         }

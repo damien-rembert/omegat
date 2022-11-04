@@ -169,7 +169,7 @@ public abstract class AbstractAutoCompleterView {
         try {
             EditorTextArea3 editor = completer.getEditor();
             int offset = editor.getCaretPosition();
-            int translationStart = editor.getOmDocument().getTranslationStart();
+            int translationStart = editor.getStartOfCurrentTranslation();
             return editor.getDocument().getText(translationStart, offset - translationStart);
         } catch (BadLocationException e) {
             return "";

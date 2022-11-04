@@ -891,8 +891,8 @@ public class EditorController implements IEditor {
             segmentExportImport.exportCurrentSegment(ste);
         }
 
-        int te = editor.getOmDocument().getTranslationEnd();
-        int ts = editor.getOmDocument().getTranslationStart();
+        int ts = editor.getStartOfCurrentTranslation();
+        int te = editor.getEndOfCurrentTranslation();
         //
         // Navigate to entry as requested.
         //
@@ -1738,8 +1738,8 @@ public class EditorController implements IEditor {
         }
 
         // build local offsets
-        int start = editor.getOmDocument().getTranslationStart();
-        int end = editor.getOmDocument().getTranslationEnd();
+        int start = editor.getStartOfCurrentTranslation();
+        int end = editor.getEndOfCurrentTranslation();
 
         CalcMarkersThread thread = markerController.markerThreads[markerController
                 .getMarkerIndex(ComesFromMTMarker.class.getName())];
@@ -1758,7 +1758,7 @@ public class EditorController implements IEditor {
                 .getMarkerIndex(ComesFromMTMarker.class.getName())];
         ((ComesFromMTMarker) thread.marker).setMark(null, null);
 
-        int off = editor.getOmDocument().getTranslationStart();
+        int off = editor.getStartOfCurrentTranslation();
         // remove text
         editor.select(start + off, end + off);
         editor.replaceSelection(text);
@@ -1813,8 +1813,8 @@ public class EditorController implements IEditor {
         if (!editor.getOmDocument().isEditMode()) {
             return -1;
         }
-        int beg = editor.getOmDocument().getTranslationStart();
-        int end = editor.getOmDocument().getTranslationEnd();
+        int beg = editor.getStartOfCurrentTranslation();
+        int end = editor.getEndOfCurrentTranslation();
         if (pos < beg) {
             pos = beg;
         }
@@ -1830,7 +1830,7 @@ public class EditorController implements IEditor {
         if (!editor.getOmDocument().isEditMode()) {
             return;
         }
-        int off = editor.getOmDocument().getTranslationStart();
+        int off = editor.getStartOfCurrentTranslation();
 
         try {
             if (pos.position != null) {
