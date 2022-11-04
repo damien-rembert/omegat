@@ -934,8 +934,7 @@ public class EditorController implements IEditor {
      * Display length of source and translation parts in the status bar.
      */
     void showLengthMessage() {
-        Document3 doc = editor.getOmDocument();
-        String trans = doc.extractTranslation();
+        String trans = getCurrentTranslation();
         if (trans != null) {
             SourceTextEntry ste = m_docSegList[displayedEntryIndex].ste;
             String lMsg = " " + ste.getSrcText().length() + "/" + trans.length() + " ";
