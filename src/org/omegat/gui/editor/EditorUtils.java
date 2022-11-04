@@ -58,48 +58,6 @@ public final class EditorUtils {
     }
 
     /**
-     * Determines the start of a word for the given model location. This method
-     * skips direction char.
-     *
-     * TODO: change to use document's locale
-     *
-     * @param c
-     * @param offs
-     * @return
-     * @throws BadLocationException
-     */
-    public static int getWordStart(JTextComponent c, int offs) throws BadLocationException {
-        int result = Utilities.getWordStart(c, offs);
-        char ch = c.getDocument().getText(result, 1).charAt(0);
-        if (isDirectionChar(ch)) {
-            result++;
-        }
-        return result;
-    }
-
-    /**
-     * Determines the end of a word for the given model location. This method
-     * skips direction char.
-     *
-     * TODO: change to use document's locale
-     *
-     * @param c
-     * @param offs
-     * @return
-     * @throws BadLocationException
-     */
-    public static int getWordEnd(JTextComponent c, int offs) throws BadLocationException {
-        int result = Utilities.getWordEnd(c, offs);
-        if (result > 0) {
-            char ch = c.getDocument().getText(result - 1, 1).charAt(0);
-            if (isDirectionChar(ch)) {
-                result--;
-            }
-        }
-        return result;
-    }
-
-    /**
      * Check if char is direction char(u202A,u202B,u202C).
      *
      * @param ch
