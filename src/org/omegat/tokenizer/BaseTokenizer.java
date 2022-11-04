@@ -376,4 +376,20 @@ public abstract class BaseTokenizer implements ITokenizer {
             return ((BaseTokenizer) Core.getProject().getSourceTokenizer()).test(newEntry.getSrcText());
         }
     };
+
+    @Override
+    public Token getTokenFromPosition(int position, String string) {
+        Token token = new Token("", position);
+        if (position < 0 || position > string.length() - 1) {
+            return token;
+        }
+        for (Token currentToken : tokenizeWords(string,
+                StemmingMode.NONE)) {
+            if (currentToken.getOffset() <= position
+                    && position < currentToken.getOffset() + currentToken.getLength()) {
+                return currentToken;
+            }
+        }
+        return token;
+    }
 }

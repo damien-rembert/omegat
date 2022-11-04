@@ -94,4 +94,6 @@ public interface ITokenizer {
      * to contain only {@link Tokenizer#DISCOVER_AT_RUNTIME}.
      */
     String[] getSupportedLanguages();
+
+	Token getTokenFromPosition(int relativeOffset, String translation);
 }
