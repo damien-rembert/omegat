@@ -307,4 +307,9 @@ public class ConsoleBindings implements IGlossaries, IEditor, IScriptLogger {
     public void showCreateGlossaryEntryDialog(Frame parent) {
 
     }
+
+    @Override
+    public CaretPosition getCaretPositionInEntryTranslation() {
+        return null;
+    }
 }

@@ -523,6 +523,11 @@ public abstract class TestCore {
             @Override
             public void activateEntry() {
             }
+
+            @Override
+            public CaretPosition getCaretPositionInEntryTranslation() {
+                return null;
+            }
         });
     }
 

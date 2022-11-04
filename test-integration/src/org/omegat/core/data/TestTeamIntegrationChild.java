@@ -469,6 +469,11 @@ public final class TestTeamIntegrationChild {
         @Override
         public void insertTextAndMark(String text) {
         }
+
+        @Override
+        public CaretPosition getCaretPositionInEntryTranslation() {
+            return null;
+        }
     };
 
     static IMainWindow mainWindow = new IMainWindow() {
