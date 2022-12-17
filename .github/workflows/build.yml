@@ -33,4 +33,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build -x winJRE -x winJRE64 -x winJRE64Signed -x winJRESigned sonar --info
+        run: ./gradlew build -x winJRE -x winJRE64 -x winJRE64Signed -x winJRESigned sonarqube --info
