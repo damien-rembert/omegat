@@ -3,9 +3,10 @@ on:
   push:
     branches:
       - master
-      - sonar-ci
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
 jobs:
   build:
     name: Build and analyze
